@@ -14,8 +14,7 @@ class NPDAProblem:
         self.to_check = S
         self.machine = M
 
-# HOW HANDLE LAMBDAS COMES LATER MAKE SURE THAT IT'S IN THE ALPHABET IT SHOULD BE FINE BUT NEED 
-# TO DOUBLE CHECK THAT 
+# RECONSIDER THE STUCTURES YOU USED FOR SOME OF THESE 
 class NPDA:
     states = []
     alphabet = []
@@ -50,30 +49,29 @@ class NPDA:
 # TEST 1 
 def d1(state_value, transition):
     switch = {
-        ("A", 0): ["B"],
-        ("A", 1): ["C"],
-        ("B", 0): ["B"],
-        ("B", 1): ["D"],
-        ("C", 0): ["B"],
-        ("C", 1): ["C"],
-        ("D", 0): ["B"],
-        ("D", 1): ["E"],
-        ("E", 0): ["B"],
-        ("E", 1): ["C"],
+        ("A", "0"): ["B"],
+        ("A", "1"): ["C"],
+        ("B", "0"): ["B"],
+        ("B", "1"): ["D"],
+        ("C", "0"): ["B"],
+        ("C", "1"): ["C"],
+        ("D", "0"): ["B"],
+        ("D", "1"): ["E"],
+        ("E", "0"): ["B"],
+        ("E", "1"): ["C"],
     }
     if (state_value, transition) in switch.keys():
         return switch[(state_value, transition)] 
     return None
-n1 = NPDA(["A", "B", "C", "D", "E"], [0, 1], d1, "A", ["E"])
-# map(lambda state: (state.value, state.transitions, state.accepted), n1.Q)
-assert([('A', [(0, 'B'), (1, 'C')], False), ('B', [(0, 'B'), (1, 'D')], False), ('C', [(0, 'B'), (1, 'C')], False), ('D', [(0, 'B'), (1, 'E')], False), ('E', [(0, 'B'), (1, 'C')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n1.states)])
+n1 = NPDA(["A", "B", "C", "D", "E"], ["0", "1"], d1, "A", ["E"])
+assert([('A', [("0", 'B'), ("1", 'C')], False), ('B', [("0", 'B'), ("1", 'D')], False), ('C', [("0", 'B'), ("1", 'C')], False), ('D', [("0", 'B'), ("1", 'E')], False), ('E', [("0", 'B'), ("1", 'C')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n1.states)])
 
 #TEST 2
 def d2(state_value, transition):
     switch = {
-        ("A", 0): ["B"],
+        ("A", "0"): ["B"],
         ("B", LAMBDA): ["F"],
-        ("C", 1): ["D"],
+        ("C", "1"): ["D"],
         ("D", LAMBDA): ["F"],
         ("E", LAMBDA): ["C", "A"],
         ("F", LAMBDA): ["E"],
@@ -81,6 +79,62 @@ def d2(state_value, transition):
     if (state_value, transition) in switch.keys():
         return switch[(state_value, transition)] 
     return None
-n2 = NPDA(["A", "B", "C", "D", "E", "F"], [0, 1, LAMBDA], d2, "F", ["B", "D", "F", "E"])
-assert([('A', [(0, 'B')], False), ('B', [('', 'F')], True), ('C', [(1, 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
+n2 = NPDA(["A", "B", "C", "D", "E", "F"], ["0", "1", LAMBDA], d2, "F", ["B", "D", "F", "E"])
+assert([('A', [("0", 'B')], False), ('B', [('', 'F')], True), ('C', [("1", 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
 
+#TEST 3
+def d3(state_value, transition):
+    switch = {
+        ("AE", "0"): ["BF"],
+        ("AE", "1"): ["DE"],
+        ("BF", "0"): ["CE"],
+        ("BF", "1"): ["CF"],
+        ("CE", "0"): ["DF"],
+        ("CE", "1"): ["DE"],
+        ("CF", "0"): ["DE"],
+        ("CF", "1"): ["DF"],
+        ("DE", "0"): ["DF"],
+        ("DE", "1"): ["DE"],
+        ("DF", "0"): ["DE"],
+        ("DF", "1"): ["DF"],
+    }
+    if (state_value, transition) in switch.keys():
+        return switch[(state_value, transition)] 
+    return None
+n3 = NPDA(["AE", "BF", "CE", "CF", "DE", "DF"], ["0", "1"], d3, "AE", ["DE", "AE", "CE", "CF"])
+assert([('AE', [("0", 'BF'), ("1", 'DE')], True), ('BF', [("0", 'CE'), ("1", 'CF')], False), ('CE', [("0", 'DF'), ("1", 'DE')], True), ('CF', [("0", 'DE'), ("1", 'DF')], True), ('DE', [("0", 'DF'), ("1", 'DE')], True), ('DF', [("0", 'DE'), ("1", 'DF')], False)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n3.states)])
+
+#TEST 4 WEIRD CASE TO LOOK FOR LATER WHERE CAN TAKE MULTIPLE PATHS 
+# WITH THE SAME TRANSITION 
+def d4(state_value, transition):
+    switch = {
+        ("A", LAMBDA): ["B", "F"],
+        ("B", LAMBDA): ["C", "I"],
+        ("C", "1"): ["D"],
+        ("D", "0"): ["E"],
+        ("E", LAMBDA): ["B", "I"],
+        ("F", "0"): ["G"],
+        ("G", "1"): ["H"],
+        ("H", LAMBDA): ["I"],
+        ("I", "0"): ["J"]
+    }
+    if (state_value, transition) in switch.keys():
+        return switch[(state_value, transition)] 
+    return None
+n4 = NPDA(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], ["0", "1", LAMBDA], d4, "A", ["B", "E", "H", "I", "J"])
+assert([('A', [('', 'B'), ('', 'F')], False), ('B', [('', 'C'), ('', 'I')], True), ('C', [("1", 'D')], False), ('D', [("0", 'E')], False), ('E', [('', 'B'), ('', 'I')], True), ('F', [("0", 'G')], False), ('G', [("1", 'H')], False), ('H', [('', 'I')], True), ('I', [("0", 'J')], True), ('J', [], True)]
+ == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n4.states)])
+
+ # TEST 5 WHICH IS ALSO A WEIRD EDGE CASE TO WATCH OUT FOR LATER 
+def d5(state_value, transition):
+    switch = {
+        ("A", "0"): ["A", "B"],
+        ("A", "1"): ["A"],
+        ("B", "0"): ["C"],
+        ("B", "1"): ["C"]
+    }
+    if (state_value, transition) in switch.keys():
+        return switch[(state_value, transition)] 
+    return None
+n5 = NPDA(["A", "B", "C"], ["0", "1"], d5, "A", ["C"])
+assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), ('1', 'C')], False), ('C', [], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n5.states)])
