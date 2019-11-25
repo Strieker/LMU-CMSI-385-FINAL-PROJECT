@@ -12,15 +12,24 @@ class State:
 class NFAProblem:
     def __init__(self, S, M):
         self.to_check = S
-        self.machine = M
+        self.machine = M 
 
     def is_string_in_language(self, possible_accepted_string, current_state):
         # WEIRDEST CASE TO HANDLE FOR: HAVE GONE THROUGH ALL POSSOIBLE PATHS? CAN BE HANDLED WITH RECURSION PROBABLY 
         if len(possible_accepted_string) == 0:
             return True if current_state.accepted else False
         # [item for sublist in l for item in sublist]
-        filtered_transitions = [item for sublist in [x for x in current_state.transitions if x.contains(possible_accepted_string[0])] for item in sublist]
-        
+        filtered_transitions = [x for x in current_state.transitions if (possible_accepted_string[0] in x or LAMBDA in x)]
+        filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
+        if len(filtered_states) > 0:
+            for state in filtered_states:
+                return self.is_string_in_language(possible_accepted_string[1::], self.find_state_in_machine(state))
+        return False
+
+    def find_state_in_machine(self, state_value):
+        for state in self.machine.states:
+            if state.value == state_value:
+                return state
 
 # RECONSIDER THE STUCTURES YOU USED FOR SOME OF THESE 
 class NFA:
@@ -146,3 +155,8 @@ def d5(state_value, transition):
     return None
 n5 = NFA(["A", "B", "C"], ["0", "1"], d5, "A", ["C"])
 assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), ('1', 'C')], False), ('C', [], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n5.states)])
+n5Problem = NFAProblem("1010", n5)
+n5Problem.is_string_in_language(n5Problem.to_check, n5Problem.machine.states[0])
+
+n4Problem = NFAProblem("1010", n4)
+n4Problem.is_string_in_language(n4Problem.to_check, n4Problem.machine.states[0])
