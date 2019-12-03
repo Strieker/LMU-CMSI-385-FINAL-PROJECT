@@ -1,0 +1,4 @@
+START=q0;ACCEPT=q2,q1;BLANK=B
+q0:a->b,R,q1
+q1:a->c,L,q2
+q0:b->b,R,q0

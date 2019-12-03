@@ -1,5 +1,5 @@
 LAMBDA = ""
-
+# WEIRD CASE WHERE YOU GO TO ANOTHER VALUE AND THE STRING THINGS ACCEPTED WHEN IT'S NOT 
 class State:
     value = None
     transitions = []
@@ -14,6 +14,8 @@ class NFAProblem:
         self.to_check = S
         self.machine = M 
 
+    # clean it up so it's recursive 
+    # call it accepts 
     def is_string_in_language(self, possible_accepted_string, current_state_value):
         current_state = self.find_state_in_machine(current_state_value)
         current_states_to_check_current_transitions_on = []
@@ -54,7 +56,6 @@ class NFAProblem:
             if state.value == state_value:
                 return state
 
-# RECONSIDER THE STUCTURES YOU USED FOR SOME OF THESE 
 class NFA:
     initial_state_values = []
     states = []
