@@ -15,34 +15,26 @@ class NFAProblem:
         self.machine = M 
 
     def is_string_in_language(self, possible_accepted_string, current_state_value):
-        # for each letter for each state if it has transitions for each letter then add it to the current states and check the 
-        # check for lambda moves go through lambda moves
-        current_state = self.find_state_in_machine(current_state_value) 
+        current_state = self.find_state_in_machine(current_state_value)
         current_states_to_check_current_transitions_on = []
         graveyard = []
         current_states_to_check_current_transitions_on.append(current_state)
         lambdas = []
+        lambda_transitions = []
         while len(current_states_to_check_current_transitions_on) != 0:
-            print(possible_accepted_string)         
             if len(possible_accepted_string) == 0 and current_state.accepted:
                     return True
             else:
-                # expand every value in the current_states 
                 filtered_transitions = []
-                lambda_transitions = []
                 for x in current_state.transitions:
                     if len(possible_accepted_string) > 0:
                         if possible_accepted_string[0] in x:
                             filtered_transitions.append(x)
                         elif LAMBDA in x:
-                            print("made it")
                             filtered_transitions.append(x)
                             lambda_transitions.append(x)
                 lambdas = [y for x in lambda_transitions for y in x if y == x[1]]
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
-                print("-------------")
-                print(filtered_states)
-                print("\n")
                 if len(filtered_states) > 0:
                     for state in filtered_states:
                         if state not in current_states_to_check_current_transitions_on and state not in graveyard:
@@ -50,7 +42,6 @@ class NFAProblem:
                 state_to_pass = current_states_to_check_current_transitions_on[0]  
                 current_states_to_check_current_transitions_on = current_states_to_check_current_transitions_on[1::]
                 graveyard.append(state_to_pass)
-                print(state_to_pass)
                 current_state = state_to_pass
             if(current_state.value not in lambdas):
                 possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
@@ -133,7 +124,7 @@ def d2(state_value, transition):
 n2 = NFA(["A", "B", "C", "D", "E", "F"], ["0", "1", LAMBDA], d2, "F", ["B", "D", "F", "E"])
 assert([('A', [("0", 'B')], False), ('B', [('', 'F')], True), ('C', [("1", 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
 n2Problem = NFAProblem("100001", n2)
-# print(n2Problem.is_string_in_language(n2Problem.to_check, n2Problem.machine.start_state))
+print(n2Problem.is_string_in_language(n2Problem.to_check, n2Problem.machine.start_state))
 
 #TEST 3
 def d3(state_value, transition):
@@ -193,8 +184,8 @@ n5 = NFA(["A", "B", "C"], ["0", "1"], d5, "A", ["C"])
 assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), ('1', 'C')], False), ('C', [], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n5.states)])
 n5Problem = NFAProblem("10", n5)
 n5Problem2 = NFAProblem("10101", n5)
-# print(n5Problem.is_string_in_language(n5Problem.to_check, n5Problem.machine.start_state))
-print(n5Problem2.is_string_in_language(n5Problem2.to_check, n5Problem2.machine.states[0]))
+print(n5Problem.is_string_in_language(n5Problem.to_check, n5Problem.machine.start_state))
+print(n5Problem2.is_string_in_language(n5Problem2.to_check, n5Problem.machine.start_state))
 # n4Problem = NFAProblem("1010", n4)
 # n4Problem.is_string_in_language(n4Problem.to_check, n4Problem.machine.states[0])
 
