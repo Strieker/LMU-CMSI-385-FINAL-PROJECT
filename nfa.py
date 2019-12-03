@@ -14,37 +14,37 @@ class NFAProblem:
         self.to_check = S
         self.machine = M 
 
-    def is_string_in_language(self, possible_accepted_string, current_state):
+    def is_string_in_language(self, possible_accepted_string, current_state_value):
         # for each letter for each state if it has transitions for each letter then add it to the current states and check the 
-        # check for lambda moves go through lambda moves 
-        current_states_to_check_current_transitions_on = self.machine.initial_state_values
+        # check for lambda moves go through lambda moves
+        current_state = self.find_state_in_machine(current_state_value) 
+        current_states_to_check_current_transitions_on = []
         graveyard = []
-        while current_states_to_check_current_transitions_on != None:
-            if len(possible_accepted_string) == 0:
-                    return current_state.accepted
+        current_states_to_check_current_transitions_on.append(current_state)
+        while len(current_states_to_check_current_transitions_on) != 0:                
+            if len(possible_accepted_string) == 0 and current_state.accepted:
+                    return True
             else:
-                filtered_transitions = [x for x in current_state.transitions if (possible_accepted_string[0] in x or LAMBDA in x)]
-                print(filtered_transitions)
+                # expand every value in the current_states 
+                filtered_transitions = []
+                for x in current_state.transitions:
+                    if len(possible_accepted_string) > 0:
+                        if possible_accepted_string[0] in x:
+                            filtered_transitions.append(x)
+                        if LAMBDA in x:
+                            filtered_transitions.append(x)
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
-                print("----------------")
-                print(filtered_states)
                 if len(filtered_states) > 0:
                     for state in filtered_states:
-                        print(possible_accepted_string)
-                        print("///////////////////")
                         if state not in current_states_to_check_current_transitions_on and state not in graveyard:
-                            current_states_to_check_current_transitions_on.append(state)
-                state_to_pass = current_states_to_check_current_transitions_on.pop()   
-                if len(current_states_to_check_current_transitions_on) != 0:
-                    print("IM THE STATE")
-                    print(state)
-                    graveyard.append(state_to_pass)
-                    current_state = self.find_state_in_machine(state_to_pass)
-                print("\n")
+                            current_states_to_check_current_transitions_on.append(self.find_state_in_machine(state))
+                state_to_pass = current_states_to_check_current_transitions_on[0]  
+                current_states_to_check_current_transitions_on = current_states_to_check_current_transitions_on[1::]
+                graveyard.append(state_to_pass)
+                print(state_to_pass)
+                current_state = state_to_pass
             possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-
-    def get_next_letter(self, possible_accepted_string, position_in_string):
-        return - 1 if position_in_string + 1 == len(possible_accepted_string) else position_in_string + 1
+        return False
 
     def find_state_in_machine(self, state_value):
         for state in self.machine.states:
@@ -179,7 +179,7 @@ n5 = NFA(["A", "B", "C"], ["0", "1"], d5, "A", ["C"])
 assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), ('1', 'C')], False), ('C', [], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n5.states)])
 n5Problem = NFAProblem("10", n5)
 n5Problem2 = NFAProblem("10101", n5)
-print(n5Problem.is_string_in_language(n5Problem2.to_check, n5Problem.machine.states[0]))
+print(n5Problem.is_string_in_language(n5Problem.to_check, n5Problem.machine.start_state))
 # print(n5Problem2.is_string_in_language(n5Problem2.to_check, n5Problem2.machine.states[0]))
 # n4Problem = NFAProblem("1010", n4)
 # n4Problem.is_string_in_language(n4Problem.to_check, n4Problem.machine.states[0])
