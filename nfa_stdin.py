@@ -24,10 +24,11 @@ class NFAStdin:
                 line = line.split(";")
                 self.start_state = line[0]
                 line = "".join(line[1::])
-                line = "".join(line.split("ACCEPT=")[1::])
-                self.accept_states = line.split(",")
-                self.states = copy.deepcopy(self.accept_states)
-                self.first = False
+                if line.find("ACCEPT") != -1:
+                    line = "".join(line.split("ACCEPT=")[1::])
+                    self.accept_states = line.split(",")
+                    self.states = copy.deepcopy(self.accept_states)
+                    self.first = False
             else:
                 if line == "\n":
                     continue

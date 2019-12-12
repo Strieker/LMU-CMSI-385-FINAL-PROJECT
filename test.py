@@ -215,3 +215,9 @@ assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), (
 # machine7 = NFA(stdin7.states, stdin7.transitions, stdin7.transition_function, stdin7.start_state, stdin7.accept_states)
 # assert(NFAProblem("000000000000000", machine7).is_string_in_language(NFAProblem("000000000000000", machine7).to_check, NFAProblem("000000000000000", machine7).machine.start_state) == False)
 # assert(NFAProblem("", machine7).is_string_in_language(NFAProblem("", machine7).to_check, NFAProblem("", machine7).machine.start_state))
+
+# stdin8 = NFAStdin("nfa8.in")
+# machine8 = NFA(stdin8.states, stdin8.transitions, stdin8.transition_function, stdin8.start_state, stdin8.accept_states)
+# assert(NFAProblem("000000000000000", machine8).is_string_in_language(NFAProblem("000000000000000", machine8).to_check, NFAProblem("000000000000000", machine8).machine.start_state) == False)
+# assert(NFAProblem("", machine8).is_string_in_language(NFAProblem("", machine8).to_check, NFAProblem("", machine8).machine.start_state) == False)
+# assert(NFAProblem("asdfghgfdsa", machine8).is_string_in_language(NFAProblem("asdfghgfdsa", machine8).to_check, NFAProblem("asdfghgfdsa", machine8).machine.start_state) == False)

@@ -1,4 +1,4 @@
-START=A;ACCEPT
+START=A
 
 A->B
 

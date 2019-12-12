@@ -27,6 +27,8 @@ class NFAProblem:
         lambdas = []
         lambda_transitions = []
         strings_to_expand = []
+        if len(self.machine.accept_states) == 0:
+            return False
         while len(to_expand) != 0:
             to_expand = [] if len(to_expand) == 1 else to_expand[1::]   
             if len(possible_accepted_string) == 0 and current_state.accepted:
