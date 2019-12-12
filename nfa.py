@@ -20,76 +20,76 @@ class NFAProblem:
 
     def is_string_in_language(self, possible_accepted_string, current_state_value):
         current_state = self.find_state_in_machine(current_state_value)
-        to_expand = []
+        states_to_expand = []
         graveyard = []
-        to_expand.append(current_state)
+        states_to_expand.append(current_state)
         graveyard.append(current_state)
-        lambdas = []
-        lambda_transitions = []
+        lambdad_states_based_on_expansion = []
+        lambdad_states_with_transitions_based_on_expansion = []
         strings_to_expand = []
         if len(self.machine.accept_states) == 0:
             return False
-        while len(to_expand) != 0:
-            to_expand = [] if len(to_expand) == 1 else to_expand[1::]   
+        while len(states_to_expand) != 0:
+            states_to_expand = [] if len(states_to_expand) == 1 else states_to_expand[1::]   
             if len(possible_accepted_string) == 0 and current_state.accepted:
                     return True
             else:
-                filtered_transitions = []
+                filtered_states_with_transitions_based_on_expansion = []
                 for x in current_state.transitions:
                     if len(possible_accepted_string) > 0:
                         if possible_accepted_string[0] in x:
-                            filtered_transitions.append(x)
+                            filtered_states_with_transitions_based_on_expansion.append(x)
                         if LAMBDA in x:
-                            filtered_transitions.append(x)
-                            lambda_transitions.append(x) 
+                            filtered_states_with_transitions_based_on_expansion.append(x)
+                            lambdad_states_with_transitions_based_on_expansion.append(x) 
                     else:
                         if LAMBDA in x:
-                            filtered_transitions.append(x)
-                            lambda_transitions.append(x) 
-                lambdas = [y for x in lambda_transitions for y in x if y == x[1]]
-                filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
-                new_start_of_transitions = []
-                current_strings1 = []
+                            filtered_states_with_transitions_based_on_expansion.append(x)
+                            lambdad_states_with_transitions_based_on_expansion.append(x) 
+                lambdad_states_based_on_expansion = [y for x in lambdad_states_with_transitions_based_on_expansion for y in x if y == x[1]]
+                filtered_states_based_on_expansion = [y for x in filtered_states_with_transitions_based_on_expansion for y in x if y == x[1]]
+                reconstructed_states_to_expand = []
+                reconstructed_strings_to_expand = []
                 cycled = False
-                if len(filtered_states) > 0:
-                    for state in filtered_states:
+                if len(filtered_states_based_on_expansion) > 0:
+                    for state in filtered_states_based_on_expansion:
                         if state in graveyard:
                             continue
                         else:
                             if not cycled:
                                 if current_state.value == state:
                                     cycled = True
-                                if state in lambdas:
-                                    current_strings1.append(possible_accepted_string)
+                                if state in lambdad_states_based_on_expansion:
+                                    reconstructed_strings_to_expand.append(possible_accepted_string)
                                 else:
-                                    part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                                    current_strings1.append(part_time_string)
-                                new_start_of_transitions.append(self.find_state_in_machine(state))
+                                    shortened_possible_accepted_string_after_expansion = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                    reconstructed_strings_to_expand.append(shortened_possible_accepted_string_after_expansion)
+                                reconstructed_states_to_expand.append(self.find_state_in_machine(state))
                             else:
                                 if current_state.value != state:
-                                    part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                                    current_strings1.insert(0, part_time_string)
-                                    new_start_of_transitions.insert(0, self.find_state_in_machine(state))
-                for state in to_expand:
-                    if state in new_start_of_transitions:
+                                    shortened_possible_accepted_string_after_expansion = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                    reconstructed_strings_to_expand.insert(0, shortened_possible_accepted_string_after_expansion)
+                                    reconstructed_states_to_expand.insert(0, self.find_state_in_machine(state))
+                for state in states_to_expand:
+                    if state in reconstructed_states_to_expand:
                         if cycled: 
-                            current_strings1.append(strings_to_expand[[x.value for x in to_expand].index(state.value)])
-                            new_start_of_transitions.append(state)
+                            reconstructed_strings_to_expand.append(strings_to_expand[[x.value for x in states_to_expand].index(state.value)])
+                            reconstructed_states_to_expand.append(state)
                         else:
                             continue
                     else:
-                        new_start_of_transitions.append(state)
-                        current_strings1.append(strings_to_expand[[x.value for x in to_expand].index(state.value)])
-                to_expand = new_start_of_transitions
-                strings_to_expand = current_strings1
-                if len(to_expand) > 0:
-                    state_to_pass = to_expand[0]  
+                        reconstructed_states_to_expand.append(state)
+                        reconstructed_strings_to_expand.append(strings_to_expand[[x.value for x in states_to_expand].index(state.value)])
+                states_to_expand = reconstructed_states_to_expand
+                strings_to_expand = reconstructed_strings_to_expand
+                if len(states_to_expand) > 0:
+                    next_state = states_to_expand[0]  
                     prev_state = current_state
-                    graveyard.append(state_to_pass)
-                    current_state = state_to_pass
-                    possible_accepted_string = "" if len(strings_to_expand) == 0 else strings_to_expand[[x.value for x in to_expand].index(current_state.value)]
+                    graveyard.append(next_state)
+                    current_state = next_state
+                    possible_accepted_string = "" if len(strings_to_expand) == 0 else strings_to_expand[[x.value for x in states_to_expand].index(current_state.value)]
                     if len(strings_to_expand) != 0:
-                        del strings_to_expand[[x.value for x in to_expand].index(current_state.value)]
+                        del strings_to_expand[[x.value for x in states_to_expand].index(current_state.value)]
         return False
 
     def find_state_in_machine(self, state_value):
