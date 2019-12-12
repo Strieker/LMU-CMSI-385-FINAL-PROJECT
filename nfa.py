@@ -58,17 +58,37 @@ class NFAProblem:
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
                 new_start_of_transitions = []
                 current_strings1 = []
+                cycled = False
                 if len(filtered_states) > 0:
                     for state in filtered_states:
                         if state in graveyard:
                             continue
                         else:
-                            new_start_of_transitions.append(self.find_state_in_machine(state))
-                            if state in lambdas:
-                                current_strings1.append(possible_accepted_string)
+                            if cycled:
+                                temp_larger_string = ""
+                                if state in [x.value for x in current_states_to_check_current_transitions_on]:
+                                    print("?")
+                                    temp_larger_string = current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(state)]
+                                else:
+                                    temp_larger_string = possible_accepted_string
+                                    if state in lambdas or state == current_state_value:
+                                        part_time_string = possible_accepted_string
+                                    else:
+                                        part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                current_strings1.append(part_time_string) 
+                                current_strings1.append(temp_larger_string)
+                                new_start_of_transitions.append(self.find_state_in_machine(state))
+                                new_start_of_transitions.append(self.find_state_in_machine(state))
                             else:
-                                part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                                current_strings1.append(part_time_string)
+                                if state == current_state.value:
+                                    cycled = True
+                                    new_start_of_transitions.append(self.find_state_in_machine(state))
+                                    if state in lambdas:
+                                        part_time_string = possible_accepted_string
+                                    else:
+                                        part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                    current_strings1.append(part_time_string)
+                            
                 for state in current_states_to_check_current_transitions_on:
                     if state in new_start_of_transitions:
                         continue
