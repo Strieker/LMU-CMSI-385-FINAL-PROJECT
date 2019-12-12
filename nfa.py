@@ -147,6 +147,6 @@ def main():
     except Exception:
         print("Bad input")
     print(problem.is_string_in_language(problem.to_check, problem.machine.start_state))
-    
+
 if __name__ == "__main__":
     main()
