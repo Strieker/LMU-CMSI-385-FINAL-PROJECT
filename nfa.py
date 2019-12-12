@@ -1,3 +1,5 @@
+import sys
+from nfa_stdin import NFAStdin
 LAMBDA = ""
 # WEIRD CASE WHERE YOU GO TO ANOTHER VALUE AND THE STRING THINGS ACCEPTED WHEN IT'S NOT 
 class State:
@@ -190,3 +192,12 @@ print(n5Problem2.is_string_in_language(n5Problem2.to_check, n5Problem.machine.st
 # n4Problem = NFAProblem("1010", n4)
 # n4Problem.is_string_in_language(n4Problem.to_check, n4Problem.machine.states[0])
 
+def main():
+    stdin = NFAStdin(sys.argv[1])
+    print(stdin.start_state)
+    print(stdin.accept_states)
+    print(stdin.states)
+    print(stdin.transitions_switch)
+
+if __name__ == "__main__":
+    main()
