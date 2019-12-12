@@ -194,10 +194,10 @@ print(n5Problem2.is_string_in_language(n5Problem2.to_check, n5Problem.machine.st
 
 def main():
     stdin = NFAStdin(sys.argv[1])
-    print(stdin.start_state)
-    print(stdin.accept_states)
-    print(stdin.states)
-    print(stdin.transitions_switch)
-    print(stdin.transitions)
+    string = sys.argv[2]
+    machine = NFA(stdin.states, stdin.transitions, stdin.transition_function, stdin.start_state, stdin.accept_states)
+    problem = NFAProblem(string, machine)
+    print(problem.is_string_in_language(problem.to_check, problem.machine.start_state))
+
 if __name__ == "__main__":
     main()
