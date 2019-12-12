@@ -66,7 +66,6 @@ class NFAProblem:
                             if not cycled:
                                 if current_state.value == state:
                                     cycled = True
-                                    new_start_of_transitions.append(self.find_state_in_machine(state))
                                 if state in lambdas:
                                     current_strings1.append(possible_accepted_string)
                                     new_start_of_transitions.append(self.find_state_in_machine(state))
