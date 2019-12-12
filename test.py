@@ -36,8 +36,6 @@ def d2(state_value, transition):
     return None
 n2 = NFA(["A", "B", "C", "D", "E", "F"], ["0", "1", LAMBDA], d2, "F", ["B", "D", "F", "E"])
 assert([('A', [("0", 'B')], False), ('B', [('', 'F')], True), ('C', [("1", 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
-n2Problem = NFAProblem("100001", n2)
-# print(n2Problem.is_string_in_language(n2Problem.to_check, n2Problem.machine.start_state))
 
 #TEST 3
 def d3(state_value, transition):
@@ -144,6 +142,13 @@ assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), (
 # print(n3.transitions_switch)
 # print(n3.transitions)
 
+# stdin3 = NFAStdin("nfa3.in")
+# machine3 = NFA(stdin3.states, stdin3.transitions, stdin3.transition_function, stdin3.start_state, stdin3.accept_states)
+# assert(NFAProblem("", machine3).is_string_in_language(NFAProblem("", machine3).to_check, NFAProblem("", machine3).machine.start_state))
+# assert(NFAProblem("00", machine3).is_string_in_language(NFAProblem("00", machine3).to_check, NFAProblem("00", machine3).machine.start_state))
+# assert(NFAProblem("010", machine3).is_string_in_language(NFAProblem("010", machine3).to_check, NFAProblem("010", machine3).machine.start_state))
+# assert(NFAProblem("0", machine3).is_string_in_language(NFAProblem("0", machine3).to_check, NFAProblem("0", machine3).machine.start_state))
+# assert(NFAProblem("1", machine3).is_string_in_language(NFAProblem("1", machine3).to_check, NFAProblem("1", machine3).machine.start_state))
 
 # n4 = NFAStdin("/Users/sas/Desktop/McLovin It/Junior Year/Work Hard/theory/LMU-CMSI-385-FINAL-PROJECT/nfa4.txt")
 # print(n4.start_state)
@@ -151,6 +156,14 @@ assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), (
 # print(n4.states)
 # print(n4.transitions_switch)
 # print(n4.transitions)
+
+stdin4 = NFAStdin("nfa4.in")
+machine3 = NFA(stdin4.states, stdin4.transitions, stdin4.transition_function, stdin4.start_state, stdin4.accept_states)
+assert(NFAProblem("", machine3).is_string_in_language(NFAProblem("", machine3).to_check, NFAProblem("", machine3).machine.start_state))
+assert(NFAProblem("00", machine3).is_string_in_language(NFAProblem("00", machine3).to_check, NFAProblem("00", machine3).machine.start_state))
+assert(NFAProblem("010", machine3).is_string_in_language(NFAProblem("010", machine3).to_check, NFAProblem("010", machine3).machine.start_state))
+assert(NFAProblem("0", machine3).is_string_in_language(NFAProblem("0", machine3).to_check, NFAProblem("0", machine3).machine.start_state))
+assert(NFAProblem("1", machine3).is_string_in_language(NFAProblem("1", machine3).to_check, NFAProblem("1", machine3).machine.start_state))
 
 # stdin5 = NFAStdin("nfa5.txt")
 # machine5 = NFA(stdin5.states, stdin5.transitions, stdin5.transition_function, stdin5.start_state, stdin5.accept_states)
