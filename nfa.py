@@ -198,6 +198,6 @@ def main():
     print(stdin.accept_states)
     print(stdin.states)
     print(stdin.transitions_switch)
-
+    print(stdin.transitions)
 if __name__ == "__main__":
     main()

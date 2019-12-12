@@ -1,0 +1,15 @@
+START=F;ACCEPT=B,D,F,E
+
+A:0->B
+
+B->F
+
+C:1->D
+
+D->F
+
+E->C
+
+E->A
+
+F->E
