@@ -75,7 +75,8 @@ class NFAProblem:
                                     new_start_of_transitions.append(self.find_state_in_machine(state))
                             else:
                                 if current_state.value != state:
-                                    current_strings1.insert(0, possible_accepted_string)
+                                    part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                    current_strings1.insert(0, part_time_string)
                                     new_start_of_transitions.insert(0, self.find_state_in_machine(state))
                 for state in to_expand:
                     if state in new_start_of_transitions:
@@ -101,10 +102,11 @@ class NFAProblem:
                     current_state = state_to_pass
                     if current_state.value not in lambdas:
                         print("made it")
-                    if len(strings_to_expand) > 0:
-                        possible_accepted_string = strings_to_expand[[x.value for x in to_expand].index(current_state.value)]
+                    
+                    possible_accepted_string = "" if len(strings_to_expand) == 0 else strings_to_expand[[x.value for x in to_expand].index(current_state.value)]
+                    if len(strings_to_expand) != 0:
                         del strings_to_expand[[x.value for x in to_expand].index(current_state.value)]
-                        print(possible_accepted_string)
+                    print(possible_accepted_string)
                     
                 print("--------\n")
             
