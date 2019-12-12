@@ -32,6 +32,7 @@ class NFAProblem:
             print("current state value: " + str(current_state.value))
             print("to expand: ")
             print([x.value for x in current_states_to_check_current_transitions_on])
+            print("current string:" + possible_accepted_string)
             if len(possible_accepted_string) == 0 and current_state.accepted:
                     return True
             else:
@@ -58,18 +59,23 @@ class NFAProblem:
                             continue
                         else:
                             new_start_of_transitions.append(self.find_state_in_machine(state))
-                    if len(current_states_to_check_current_transitions_on) > 0:
-                        new_start_of_transitions.append(current_states_to_check_current_transitions_on[0])
-                    current_states_to_check_current_transitions_on = [] if len(current_states_to_check_current_transitions_on) <= 1 else current_states_to_check_current_transitions_on[1::]   
-                    current_states_to_check_current_transitions_on = list(set(new_start_of_transitions + current_states_to_check_current_transitions_on))
+                    for val in current_states_to_check_current_transitions_on:
+                        if val in new_start_of_transitions:
+                            continue
+                        else:
+                            new_start_of_transitions.append(val)
+                    current_states_to_check_current_transitions_on = new_start_of_transitions
                 print("to expand: ")
-                # current_states_to_check_current_transitions_on = [] if len(current_states_to_check_current_transitions_on) == 1 else current_states_to_check_current_transitions_on[1::]   
                 print([x.value for x in current_states_to_check_current_transitions_on])
+                if current_state.value not in lambdas:
+                        print("made it")
+                        possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                        print(possible_accepted_string)
                 if len(current_states_to_check_current_transitions_on) > 0:
                     state_to_pass = current_states_to_check_current_transitions_on[0]  
                     graveyard.append(state_to_pass)
                     current_state = state_to_pass
-                    if current_state.value not in lambdas:
+                if current_state.value not in lambdas:
                         print("made it")
                         possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
                         print(possible_accepted_string)
@@ -118,7 +124,6 @@ class NFA:
         return transitions
 
 def main():
- 
     try:
         stdin = NFAStdin(sys.argv[1])
         machine = NFA(stdin.states, stdin.transitions, stdin.transition_function, stdin.start_state, stdin.accept_states)
@@ -127,5 +132,6 @@ def main():
     except Exception:
         print("Bad input")
     print(problem.is_string_in_language(problem.to_check, problem.machine.start_state))
+
 if __name__ == "__main__":
     main()

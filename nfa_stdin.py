@@ -13,6 +13,7 @@ class NFAStdin:
     transitions = []
     pathname = ""
     # handle in main filename, string_to_test
+    # HANDLE IF NO ACCEPT STATES
     def __init__(self, path):
         self.pathname = path
         sys.stdin = open(self.pathname, 'r')
