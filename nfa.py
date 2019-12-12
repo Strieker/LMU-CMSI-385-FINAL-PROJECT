@@ -29,6 +29,7 @@ class NFAProblem:
         lambda_transitions = []
         current_strings = []
         while len(current_states_to_check_current_transitions_on) != 0:
+            
             current_states_to_check_current_transitions_on = [] if len(current_states_to_check_current_transitions_on) == 1 else current_states_to_check_current_transitions_on[1::]   
             print("current state value: " + str(current_state.value))
             print("to expand: ")
@@ -57,8 +58,6 @@ class NFAProblem:
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
                 new_start_of_transitions = []
                 current_strings1 = []
-                consumed = False
-                part_time_string = ""
                 if len(filtered_states) > 0:
                     for state in filtered_states:
                         if state in graveyard:
@@ -68,14 +67,7 @@ class NFAProblem:
                             if state in lambdas:
                                 current_strings1.append(possible_accepted_string)
                             else:
-                                if state == current_state.value:
-                                    consumed = True
-                                    part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                                else:
-                                    if consumed:
-                                        part_time_string = possible_accepted_string
-                                    else:
-                                        part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
                                 current_strings1.append(part_time_string)
                 for state in current_states_to_check_current_transitions_on:
                     if state in new_start_of_transitions:
@@ -101,6 +93,7 @@ class NFAProblem:
                         possible_accepted_string = current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
                         del current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
                         print(possible_accepted_string)
+                    
                 print("--------\n")
             
         # if len(possible_accepted_string) == 0 and current_state.accepted:
