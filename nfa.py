@@ -34,6 +34,9 @@ class NFAProblem:
             print("current state value: " + str(current_state.value))
             print("to expand: ")
             print([x.value for x in current_states_to_check_current_transitions_on])
+            print("strings:")
+            print(current_strings)
+            print(possible_accepted_string)
             if len(possible_accepted_string) == 0 and current_state.accepted:
                     return True
             else:
@@ -71,11 +74,7 @@ class NFAProblem:
                         continue
                     else:
                         new_start_of_transitions.append(state)
-                        if state in lambdas:
-                            current_strings1.append(possible_accepted_string)
-                        else:
-                            part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                            current_strings1.append(part_time_string)
+                        current_strings1.append(current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(state.value)])
                 current_states_to_check_current_transitions_on = new_start_of_transitions
                 current_strings = current_strings1
                 print("please god strings:")
@@ -94,9 +93,7 @@ class NFAProblem:
                         possible_accepted_string = current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
                         del current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
                         print(possible_accepted_string)
-                    print("strings:")
-                    print(current_strings)
-                print(possible_accepted_string)
+                    
                 print("--------\n")
             
         # if len(possible_accepted_string) == 0 and current_state.accepted:
