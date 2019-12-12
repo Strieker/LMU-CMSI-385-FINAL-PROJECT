@@ -1,5 +1,6 @@
 import sys
 from nfa_stdin import NFAStdin
+from collections import OrderedDict
 LAMBDA = ""
 #CHECK YOU DONT GET ACCEPTED WHEN AT ACCEPT STATE BUT STILL A STRING LEFT 
 class State:
@@ -19,7 +20,6 @@ class NFAProblem:
     # clean it up so it's recursive 
     # call it accepts 
     def is_string_in_language(self, possible_accepted_string, current_state_value):
-
         current_state = self.find_state_in_machine(current_state_value)
         current_states_to_check_current_transitions_on = []
         graveyard = []
@@ -27,12 +27,13 @@ class NFAProblem:
         graveyard.append(current_state)
         lambdas = []
         lambda_transitions = []
+        current_strings = []
         while len(current_states_to_check_current_transitions_on) != 0:
-            current_states_to_check_current_transitions_on = [] if len(current_states_to_check_current_transitions_on) <= 1 else current_states_to_check_current_transitions_on[1::]   
+            
+            current_states_to_check_current_transitions_on = [] if len(current_states_to_check_current_transitions_on) == 1 else current_states_to_check_current_transitions_on[1::]   
             print("current state value: " + str(current_state.value))
             print("to expand: ")
             print([x.value for x in current_states_to_check_current_transitions_on])
-            print("current string:" + possible_accepted_string)
             if len(possible_accepted_string) == 0 and current_state.accepted:
                     return True
             else:
@@ -53,32 +54,49 @@ class NFAProblem:
                 print(lambdas)
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
                 new_start_of_transitions = []
+                current_strings1 = []
                 if len(filtered_states) > 0:
                     for state in filtered_states:
                         if state in graveyard:
                             continue
                         else:
                             new_start_of_transitions.append(self.find_state_in_machine(state))
-                    for val in current_states_to_check_current_transitions_on:
-                        if val in new_start_of_transitions:
-                            continue
+                            if state in lambdas:
+                                current_strings1.append(possible_accepted_string)
+                            else:
+                                part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                                current_strings1.append(part_time_string)
+                for state in current_states_to_check_current_transitions_on:
+                    if state in new_start_of_transitions:
+                        continue
+                    else:
+                        new_start_of_transitions.append(state)
+                        if state in lambdas:
+                            current_strings1.append(possible_accepted_string)
                         else:
-                            new_start_of_transitions.append(val)
-                    current_states_to_check_current_transitions_on = new_start_of_transitions
-                print("to expand: ")
+                            part_time_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                            current_strings1.append(part_time_string)
+                current_states_to_check_current_transitions_on = new_start_of_transitions
+                current_strings = current_strings1
+                print("please god strings:")
+                print(current_strings)
+                print("to expand2: ")
                 print([x.value for x in current_states_to_check_current_transitions_on])
-                if current_state.value not in lambdas:
-                        print("made it")
-                        possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
-                        print(possible_accepted_string)
+
                 if len(current_states_to_check_current_transitions_on) > 0:
                     state_to_pass = current_states_to_check_current_transitions_on[0]  
+                    prev_state = current_state
                     graveyard.append(state_to_pass)
                     current_state = state_to_pass
-                if current_state.value not in lambdas:
+                    if current_state.value not in lambdas:
                         print("made it")
-                        possible_accepted_string = "" if len(possible_accepted_string) <= 1 else possible_accepted_string[1::]
+                    if len(current_strings) > 0:
+                        possible_accepted_string = current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
+                        del current_strings[[x.value for x in current_states_to_check_current_transitions_on].index(current_state.value)]
                         print(possible_accepted_string)
+                    print("strings:")
+                    print(current_strings)
+                print(possible_accepted_string)
                 print("--------\n")
             
         # if len(possible_accepted_string) == 0 and current_state.accepted:
@@ -132,6 +150,6 @@ def main():
     except Exception:
         print("Bad input")
     print(problem.is_string_in_language(problem.to_check, problem.machine.start_state))
-
+    
 if __name__ == "__main__":
     main()

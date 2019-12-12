@@ -37,7 +37,7 @@ def d2(state_value, transition):
 n2 = NFA(["A", "B", "C", "D", "E", "F"], ["0", "1", LAMBDA], d2, "F", ["B", "D", "F", "E"])
 assert([('A', [("0", 'B')], False), ('B', [('', 'F')], True), ('C', [("1", 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
 n2Problem = NFAProblem("100001", n2)
-print(n2Problem.is_string_in_language(n2Problem.to_check, n2Problem.machine.start_state))
+# print(n2Problem.is_string_in_language(n2Problem.to_check, n2Problem.machine.start_state))
 
 #TEST 3
 def d3(state_value, transition):
@@ -132,6 +132,7 @@ assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), (
 stdin5 = NFAStdin("nfa5.txt")
 machine5 = NFA(stdin5.states, stdin5.transitions, stdin5.transition_function, stdin5.start_state, stdin5.accept_states)
 assert(NFAProblem("10", machine5).is_string_in_language(NFAProblem("10", machine5).to_check, NFAProblem("10", machine5).machine.start_state))
+assert(NFAProblem("100", machine5).is_string_in_language(NFAProblem("10", machine5).to_check, NFAProblem("10", machine5).machine.start_state))
 assert(NFAProblem("01", machine5).is_string_in_language(NFAProblem("01", machine5).to_check, NFAProblem("01", machine5).machine.start_state))
 assert(NFAProblem("010", machine5).is_string_in_language(NFAProblem("010", machine5).to_check, NFAProblem("010", machine5).machine.start_state))
 assert(NFAProblem("1010100", machine5).is_string_in_language(NFAProblem("1010100", machine5).to_check, NFAProblem("1010100", machine5).machine.start_state))
@@ -148,3 +149,8 @@ assert(NFAProblem("", machine5).is_string_in_language(NFAProblem("", machine5).t
 # print(n6.states)
 # print(n6.transitions_switch)
 # print(n6.transitions)
+
+# stdin7 = NFAStdin("nfa7.txt")
+# machine7 = NFA(stdin7.states, stdin7.transitions, stdin7.transition_function, stdin7.start_state, stdin7.accept_states)
+# assert(NFAProblem("000000000000000", machine7).is_string_in_language(NFAProblem("000000000000000", machine7).to_check, NFAProblem("000000000000000", machine7).machine.start_state) == False)
+# assert(NFAProblem("", machine7).is_string_in_language(NFAProblem("", machine7).to_check, NFAProblem("", machine7).machine.start_state))
