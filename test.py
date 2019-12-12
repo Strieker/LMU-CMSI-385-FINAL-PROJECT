@@ -2,7 +2,6 @@ import sys
 from nfa import NFA, NFAProblem, LAMBDA
 from nfa_stdin import NFAStdin
 
-# TEST THAT THE CONSTRUCTION OF THE NFA ITSELF IS CORRECT
 def d1(state_value, transition):
     switch = {
         ("A", "0"): ["B"],
@@ -37,7 +36,6 @@ def d2(state_value, transition):
 n2 = NFA(["A", "B", "C", "D", "E", "F"], ["0", "1", LAMBDA], d2, "F", ["B", "D", "F", "E"])
 assert([('A', [("0", 'B')], False), ('B', [('', 'F')], True), ('C', [("1", 'D')], False), ('D', [('', 'F')], True), ('E', [('', 'C'), ('', 'A')], True), ('F', [('', 'E')], True)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n2.states)])
 
-#TEST 3
 def d3(state_value, transition):
     switch = {
         ("AE", "0"): ["BF"],
@@ -58,9 +56,7 @@ def d3(state_value, transition):
     return None
 n3 = NFA(["AE", "BF", "CE", "CF", "DE", "DF"], ["0", "1"], d3, "AE", ["DE", "AE", "CE", "CF"])
 assert([('AE', [("0", 'BF'), ("1", 'DE')], True), ('BF', [("0", 'CE'), ("1", 'CF')], False), ('CE', [("0", 'DF'), ("1", 'DE')], True), ('CF', [("0", 'DE'), ("1", 'DF')], True), ('DE', [("0", 'DF'), ("1", 'DE')], True), ('DF', [("0", 'DE'), ("1", 'DF')], False)] == [state for state in map(lambda state: (state.value, state.transitions, state.accepted), n3.states)])
-
-#TEST 4 WEIRD CASE TO LOOK FOR LATER WHERE CAN TAKE MULTIPLE PATHS 
-# WITH THE SAME TRANSITION 
+ 
 def d4(state_value, transition):
     switch = {
         ("A", LAMBDA): ["B", "F"],
@@ -197,6 +193,23 @@ assert([('A', [('0', 'A'), ('0', 'B'), ('1', 'A')], False), ('B', [('0', 'C'), (
 # print(n6.transitions_switch)
 # print(n6.transitions)
 
+
+stdin6 = NFAStdin("nfa6.in")
+machine6 = NFA(stdin6.states, stdin6.transitions, stdin6.transition_function, stdin6.start_state, stdin6.accept_states)
+assert(NFAProblem("000", machine6).is_string_in_language(NFAProblem("000", machine6).to_check, NFAProblem("000", machine6).machine.start_state))
+assert(NFAProblem("00", machine6).is_string_in_language(NFAProblem("00", machine6).to_check, NFAProblem("00", machine6).machine.start_state))
+assert(NFAProblem("1111101", machine6).is_string_in_language(NFAProblem("1111101", machine6).to_check, NFAProblem("1111101", machine6).machine.start_state))
+assert(NFAProblem("1111100", machine6).is_string_in_language(NFAProblem("1111100", machine6).to_check, NFAProblem("1111100", machine6).machine.start_state))
+assert(NFAProblem("1010000000", machine6).is_string_in_language(NFAProblem("1010000000", machine6).to_check, NFAProblem("1010000000", machine6).machine.start_state))
+assert(NFAProblem("00000001", machine6).is_string_in_language(NFAProblem("00000001", machine6).to_check, NFAProblem("00000001", machine6).machine.start_state))
+assert(NFAProblem("", machine6).is_string_in_language(NFAProblem("", machine6).to_check, NFAProblem("", machine6).machine.start_state) == False)
+assert(NFAProblem("0", machine6).is_string_in_language(NFAProblem("0", machine6).to_check, NFAProblem("0", machine6).machine.start_state) == False)
+assert(NFAProblem("010", machine6).is_string_in_language(NFAProblem("010", machine6).to_check, NFAProblem("010", machine6).machine.start_state) == False)
+assert(NFAProblem("01010", machine6).is_string_in_language(NFAProblem("01010", machine6).to_check, NFAProblem("01010", machine6).machine.start_state) == False)
+assert(NFAProblem("111110", machine6).is_string_in_language(NFAProblem("111110", machine6).to_check, NFAProblem("111110", machine6).machine.start_state) == False)
+assert(NFAProblem("00000000000001111110", machine6).is_string_in_language(NFAProblem("00000000000001111110", machine6).to_check, NFAProblem("00000000000001111110", machine6).machine.start_state) == False)
+assert(NFAProblem("1110", machine6).is_string_in_language(NFAProblem("1110", machine6).to_check, NFAProblem("1110", machine6).machine.start_state) == False)
+assert(NFAProblem("sdfghkl;kjhgfdsfghjkl", machine6).is_string_in_language(NFAProblem("sdfghkl;kjhgfdsfghjkl", machine6).to_check, NFAProblem("sdfghkl;kjhgfdsfghjkl", machine6).machine.start_state) == False)
 # stdin7 = NFAStdin("nfa7.txt")
 # machine7 = NFA(stdin7.states, stdin7.transitions, stdin7.transition_function, stdin7.start_state, stdin7.accept_states)
 # assert(NFAProblem("000000000000000", machine7).is_string_in_language(NFAProblem("000000000000000", machine7).to_check, NFAProblem("000000000000000", machine7).machine.start_state) == False)
