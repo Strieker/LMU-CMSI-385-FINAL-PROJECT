@@ -19,6 +19,7 @@ class NFAProblem:
     # clean it up so it's recursive 
     # call it accepts 
     def is_string_in_language(self, possible_accepted_string, current_state_value):
+
         current_state = self.find_state_in_machine(current_state_value)
         current_states_to_check_current_transitions_on = []
         graveyard = []
@@ -42,12 +43,14 @@ class NFAProblem:
                         if LAMBDA in x:
                             filtered_transitions.append(x)
                             lambda_transitions.append(x) 
+                    else:
+                        if LAMBDA in x:
+                            filtered_transitions.append(x)
+                            lambda_transitions.append(x) 
                 lambdas = [y for x in lambda_transitions for y in x if y == x[1]]
                 print("lambdas: ")
                 print(lambdas)
                 filtered_states = [y for x in filtered_transitions for y in x if y == x[1]]
-                # print("filtered states: ")
-                # print(filtered_states)
                 if len(filtered_states) > 0:
                     for state in filtered_states:
                         if state in graveyard:
