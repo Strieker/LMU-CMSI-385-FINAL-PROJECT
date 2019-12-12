@@ -17,7 +17,6 @@ class NFAProblem:
         self.to_check = S
         self.machine = M 
 
-
     def is_string_in_language(self, possible_accepted_string, current_state_value):
         current_state = self.find_state_in_machine(current_state_value)
         states_to_expand = []

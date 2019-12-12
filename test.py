@@ -202,7 +202,7 @@ class Test:
         assert(NFAProblem("asdfghgfdsa", machine8).is_string_in_language(NFAProblem("asdfghgfdsa", machine8).to_check, NFAProblem("asdfghgfdsa", machine8).machine.start_state) == False)
 
 def main():
-    test_harness = Test()
+    test = Test()
     # UNCOMMENT ONE FUNCTION CALL AT A TIME 
     # test_harness.test1()
     # test_harness.test2()
